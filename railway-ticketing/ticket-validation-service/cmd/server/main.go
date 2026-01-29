@@ -11,7 +11,6 @@ import (
 
 func main() {
 	store := store.NewTicketStore()
-	store.Seed()
 
 	svc := service.NewValidationService(store)
 
