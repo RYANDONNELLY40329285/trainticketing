@@ -15,8 +15,10 @@ func main() {
 
 	svc := service.NewValidationService(store)
 
+	http.HandleFunc("/tickets", handler.CreateTicketHandler(store))
 	http.HandleFunc("/validate", handler.ValidateHandler(svc))
 
 	log.Println("Ticket validation service running on :8080")
 	log.Fatal(http.ListenAndServe(":8080", nil))
+
 }

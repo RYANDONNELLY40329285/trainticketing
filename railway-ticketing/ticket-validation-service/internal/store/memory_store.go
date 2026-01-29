@@ -5,6 +5,8 @@ import (
 	"sync"
 	"ticket-validation/internal/model"
 	"time"
+
+	"github.com/google/uuid"
 )
 
 var ErrNotFound = errors.New("ticket not found")
@@ -22,14 +24,22 @@ func NewTicketStore() *TicketStore {
 	}
 }
 
-func (s *TicketStore) Seed() {
-	s.tickets["TK0001"] = &model.Ticket{
-		TicketID:    "TK0001",
-		Origin:      "BEL",
-		Destination: "DUB",
-		ValidDate:   time.Now().AddDate(0, 0, 1),
+func (s *TicketStore) CreateTicket(origin, destination string, validUntil time.Time) *model.Ticket {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	id := uuid.NewString()
+
+	ticket := &model.Ticket{
+		TicketID:    id,
+		Origin:      origin,
+		Destination: destination,
+		ValidDate:   validUntil,
 		Used:        false,
 	}
+
+	s.tickets[id] = ticket
+	return ticket
 }
 
 func (s *TicketStore) Validate(ticketID, gateOrigin string) error {
