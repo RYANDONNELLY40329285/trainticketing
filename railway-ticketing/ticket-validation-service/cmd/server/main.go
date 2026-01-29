@@ -15,7 +15,12 @@ import (
 
 func main() {
 
-	godotenv.Load()
+	err := godotenv.Load()
+
+	if err != nil {
+		log.Println(" No .env file found, relying on environment variables")
+	}
+
 	store := store.NewTicketStore()
 
 	svc := service.NewValidationService(store)

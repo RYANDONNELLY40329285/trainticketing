@@ -1,14 +1,33 @@
 import fetch from "node-fetch";
 
 export async function gateProxy(req, res) {
-  const response = await fetch("http://localhost:8090/scan", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(req.body),
-  });
+  try {
+    const response = await fetch("http://localhost:8090/scan", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-internal-token": process.env.INTERNAL_SERVICE_TOKEN,
+      },
+      body: JSON.stringify(req.body),
+    });
 
-  const data = await response.text();
-  res.status(response.status).send(data);
+    const contentType = response.headers.get("content-type") || "";
+    const body = await response.text();
+
+    // Pass through response exactly (status + body)
+    res.status(response.status);
+
+    if (contentType.includes("application/json")) {
+      res.type("application/json").send(body);
+    } else {
+      res.type("text/plain").send(body);
+    }
+
+  } catch (err) {
+    console.error("Gate service error:", err);
+    res.status(502).json({
+      gateAction: "DENY",
+      reason: "GATE_SERVICE_UNAVAILABLE",
+    });
+  }
 }
