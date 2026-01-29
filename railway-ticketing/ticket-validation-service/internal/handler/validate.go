@@ -3,6 +3,7 @@ package handler
 import (
 	"encoding/json"
 	"net/http"
+	"os"
 
 	"ticket-validation/internal/service"
 )
@@ -19,6 +20,13 @@ type ValidationResponse struct {
 
 func ValidateHandler(svc *service.ValidationService) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+
+		token := r.Header.Get("X-Internal-Token")
+		if token != os.Getenv("INTERNAL_SERVICE_TOKEN") {
+			http.Error(w, "forbidden", http.StatusForbidden)
+			return
+		}
+
 		var req ValidationRequest
 		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 			http.Error(w, "invalid request", http.StatusBadRequest)
@@ -26,9 +34,6 @@ func ValidateHandler(svc *service.ValidationService) http.HandlerFunc {
 		}
 
 		status, reason := svc.Validate(req.TicketID, req.GateOrigin)
-
-		resp := ValidationResponse{Status: status, Reason: reason}
-		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(resp)
+		json.NewEncoder(w).Encode(ValidationResponse{status, reason})
 	}
 }

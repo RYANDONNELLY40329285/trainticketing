@@ -8,9 +8,12 @@ use std::time::Duration;
 use tokio::net::TcpListener;
 use tokio::sync::Mutex;
 use axum::response::IntoResponse;
+use dotenv::dotenv;
 
 use once_cell::sync::Lazy;
 use circuit_breaker::CircuitBreaker;
+
+
 
 const VALIDATION_SERVICE_URL: &str = "http://localhost:8080/validate";
 
@@ -60,11 +63,19 @@ async fn scan_ticket(
         .build()
         .unwrap();
 
+ 
+
+
+    let token = std::env::var("INTERNAL_SERVICE_TOKEN")
+    .expect("INTERNAL_SERVICE_TOKEN must be set");
+
     let response = client
         .post(VALIDATION_SERVICE_URL)
+        .header("X-Internal-Token", token)
         .json(&req)
         .send()
         .await;
+
 
  
     let mut breaker = BREAKER.lock().await;
@@ -114,7 +125,10 @@ async fn scan_ticket(
 
 #[tokio::main]
 async fn main() {
-    let app = Router::new().route("/scan", post(scan_ticket));
+
+    
+      dotenv().ok();
+        let app = Router::new().route("/scan", post(scan_ticket));
 
     let addr = SocketAddr::from(([0, 0, 0, 0], 8090));
     println!("Gate scanner running on {}", addr);
