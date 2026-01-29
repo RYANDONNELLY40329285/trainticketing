@@ -3,6 +3,7 @@ package store
 import (
 	"errors"
 	"sync"
+	"ticket-validation/internal/metrics"
 	"ticket-validation/internal/model"
 	"time"
 
@@ -13,16 +14,21 @@ var ErrNotFound = errors.New("ticket not found")
 var ErrUsed = errors.New("ticket already used")
 var ErrExpired = errors.New("ticket expired")
 
+type idempotencyEntry struct {
+	ticketID  string
+	expiresAt time.Time
+}
+
 type TicketStore struct {
 	mu              sync.Mutex
 	tickets         map[string]*model.Ticket
-	idempotencyKeys map[string]string
+	idempotencyKeys map[string]idempotencyEntry
 }
 
 func NewTicketStore() *TicketStore {
 	return &TicketStore{
 		tickets:         make(map[string]*model.Ticket),
-		idempotencyKeys: make(map[string]string),
+		idempotencyKeys: make(map[string]idempotencyEntry),
 	}
 }
 
@@ -79,8 +85,16 @@ func (s *TicketStore) CreateTicketIdempotent(
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
-	if ticketID, exists := s.idempotencyKeys[idempotencyKey]; exists {
-		return s.tickets[ticketID]
+	now := time.Now()
+	ttl := 10 * time.Minute
+
+	if entry, exists := s.idempotencyKeys[idempotencyKey]; exists {
+		if entry.expiresAt.After(now) {
+			metrics.TicketsCreatedIdempotentReuseTotal.Inc()
+			return s.tickets[entry.ticketID]
+		}
+
+		delete(s.idempotencyKeys, idempotencyKey)
 	}
 
 	id := uuid.NewString()
@@ -94,7 +108,10 @@ func (s *TicketStore) CreateTicketIdempotent(
 	}
 
 	s.tickets[id] = ticket
-	s.idempotencyKeys[idempotencyKey] = id
+	s.idempotencyKeys[idempotencyKey] = idempotencyEntry{
+		ticketID:  id,
+		expiresAt: now.Add(ttl),
+	}
 
 	return ticket
 }

@@ -1,6 +1,9 @@
 package service
 
-import "ticket-validation/internal/store"
+import (
+	"ticket-validation/internal/metrics"
+	"ticket-validation/internal/store"
+)
 
 type ValidationService struct {
 	store *store.TicketStore
@@ -15,6 +18,8 @@ func (v *ValidationService) Validate(ticketID, gateOrigin string) (string, strin
 	if err == nil {
 		return "VALID", "OK"
 	}
+
+	metrics.TicketValidationDeniedTotal.Inc()
 
 	switch err {
 	case store.ErrNotFound:

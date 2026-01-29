@@ -21,6 +21,11 @@ type CreateTicketResponse struct {
 func CreateTicketHandler(store *store.TicketStore) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 
+		if r.Method != http.MethodPost {
+			http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
+			return
+		}
+
 		idempotencyKey := r.Header.Get("Idempotency-Key")
 		if idempotencyKey == "" {
 			http.Error(w, "missing Idempotency-Key header", http.StatusBadRequest)
