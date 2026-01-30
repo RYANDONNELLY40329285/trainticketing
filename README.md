@@ -107,3 +107,51 @@ User-facing React + Vite application
     Runs on port 5173,
     Communicates only with API Gateway,
     Never talks directly to backend services
+
+## Environment Configuration (.env)
+
+This project uses a central .env file to configure environment-specific values for backend services.
+The .env file is required to run the backend, but it is never committed to source control.
+
+### Why a .env File Is Used
+
+    In real systems, configuration is kept separate from code to ensure
+    Secrets are not hardcoded,
+    Different environments (dev / test / prod) can use different values,
+    Services remain portable and container-friendly,
+    Credentials can be rotated without code changes,
+
+### What goes in .env 
+Note values are examples only
+
+    # ----------------------------------
+    # Authentication
+    # ----------------------------------
+    JWT_SECRET=super-secret-dev-key
+    JWT_EXPIRES_IN=1h
+
+    # ----------------------------------
+    # Internal service authentication
+    # ----------------------------------
+    INTERNAL_SERVICE_TOKEN=replace-with-secure-random-string
+
+    # ----------------------------------
+    # Internal service URLs
+    # (Docker service names are used as hosts)
+    # ----------------------------------
+    AUTH_SERVICE_URL=http://auth-service:4000
+    TICKET_VALIDATION_SERVICE_URL=http://ticket-validation-service:8080
+    GATE_SCANNER_SERVICE_URL=http://gate-scanner:8090
+
+    # ----------------------------------
+    # API Gateway
+    # ----------------------------------
+    API_GATEWAY_PORT=3000
+
+### Internal Service Security
+Several backend services require an internal service token = INTERNAL_SERVICE_TOKEN=replace-with-secure-random-string
+
+    This token is
+    
+
+
