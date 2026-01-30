@@ -15,9 +15,8 @@ func RoutesHandler() http.HandlerFunc {
 		w.Header().Set("Content-Type", "application/json")
 
 		routes := map[string][]string{
-			"Edinburgh":  {"Glasgow"},
-			"Belfast":    {"Dublin"},
-			"Manchester": {"Liverpool"},
+			"Belfast": {"Dublin", "Newry"},
+			"Newry":   {"Dublin", "Belfast"},
 		}
 
 		var result []map[string]any
