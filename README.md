@@ -75,3 +75,35 @@ Internal core domain service
     Business rules enforcement
 
     Security:
+    Only accepts requests from trusted internal services,
+    Uses internal authentication headers,
+    Not exposed outside the Docker network
+
+## Internal Communication Model
+
+    Internal services communicate using
+    Private Docker network,
+    Internal service URLs (e.g. http://ticket-validation-service:8080),
+    Internal authentication tokens (via headers),
+    No public ports exposed
+
+    This ensures
+    Clear trust boundaries,
+    Strong separation of concerns,
+    Production-style service isolation
+
+## Frontend Service (Public)
+
+Frontend (ticket-frontend)
+User-facing React + Vite application
+
+    Responsibilities
+    Ticket purchase UI,
+    Ticket wallet management,
+    Gate simulation UI,
+    User interaction only (no business logic)
+
+    Access
+    Runs on port 5173,
+    Communicates only with API Gateway,
+    Never talks directly to backend services
