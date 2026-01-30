@@ -20,7 +20,7 @@ Only the API Gateway exposes ports to the host machine.
 
 ## Backend Services Overview
 
-1 API Gateway (api-gateway-service)
+### 1 API Gateway (api-gateway-service)
 
 Public-facing entry point for all client requests
 
@@ -64,4 +64,14 @@ Internal service – simulates physical station gates
     Protected using an internal service token,
     Never exposed directly to frontend
 
+4 Ticket Validation Service (ticket-validation-service)
 
+Internal core domain service
+
+    Responsibilities
+    Ticket lifecycle management,
+    Validity checks (route, expiry, usage),
+    Idempotent ticket creation,
+    Business rules enforcement
+
+    Security:
