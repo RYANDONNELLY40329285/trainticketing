@@ -39,7 +39,7 @@ Exposed port:
     /scan,
     /routes
 
-2 Authentication Service (auth-service) 
+### 2 Authentication Service (auth-service) 
 
 Internal service – not publicly accessible 
 
@@ -50,7 +50,7 @@ Internal service – not publicly accessible
 
 Access - Only reachable from API Gateway over the internal Docker network
 
-3 Gate Scanner Service (gate-scanner-service)
+### 3 Gate Scanner Service (gate-scanner-service)
 
 Internal service – simulates physical station gates
 
@@ -64,7 +64,7 @@ Internal service – simulates physical station gates
     Protected using an internal service token,
     Never exposed directly to frontend
 
-4 Ticket Validation Service (ticket-validation-service)
+### 4 Ticket Validation Service (ticket-validation-service)
 
 Internal core domain service
 
