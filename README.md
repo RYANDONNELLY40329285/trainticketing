@@ -1,10 +1,11 @@
 # Railway Ticketing System
 
-##This project is a microservice-based railway ticketing system designed to simulate a real-world transport flow:
-    Users purchase tickets via a frontend UI
-    Tickets are validated at station gates
-    Internal services communicate securely behind an API gateway
-    Only the gateway and frontend are publicly accessible
+This project is a microservice-based railway ticketing system designed to simulate a real-world transport flow:
+    
+    Users purchase tickets via a frontend UI,
+    Tickets are validated at station gates,
+    Internal services communicate securely behind an API gateway,
+    Only the gateway and frontend are publicly accessible.,
 
 ## Backend Services (Private / Internal)
 
