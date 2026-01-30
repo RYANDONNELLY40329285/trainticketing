@@ -1,4 +1,4 @@
-##Railway Ticketing System
+# Railway Ticketing System
 
 ##This project is a microservice-based railway ticketing system designed to simulate a real-world transport flow:
     Users purchase tickets via a frontend UI
@@ -31,4 +31,10 @@ Public-facing entry point for all client requests
 
 Exposed port:
     3000 (accessible by frontend only)
+
+    Example responsibilitie
+    /auth/login,
+    /tickets,
+    /scan,
+    /routes
 
