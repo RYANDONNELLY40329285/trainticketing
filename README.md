@@ -39,3 +39,14 @@ Exposed port:
     /scan,
     /routes
 
+2 Authentication Service (auth-service) 
+
+Internal service – not publicly accessible 
+
+    Responsibilities
+    User authentication,
+    Token generation (JWT),
+    Credential validation
+
+Access - Only reachable from API Gateway over the internal Docker network
+
