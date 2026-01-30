@@ -152,6 +152,13 @@ Note values are examples only
 Several backend services require an internal service token = INTERNAL_SERVICE_TOKEN=replace-with-secure-random-string
 
     This token is
+    Shared only between trusted backend services
+    Sent via HTTP headers (e.g. X-Internal-Token)
+    Used to prevent unauthorised internal calls
     
+    This ensures:
+    Frontend clients cannot call internal services directly
+    Only the API Gateway and trusted services can communicate internally
+
 
 
