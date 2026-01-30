@@ -67,7 +67,7 @@ func (s *TicketStore) Validate(ticketID, gateOrigin string) error {
 		return ErrExpired
 	}
 
-	if ticket.Origin != gateOrigin {
+	if ticket.Destination != gateOrigin {
 		return errors.New("route mismatch")
 	}
 

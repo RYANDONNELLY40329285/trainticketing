@@ -1,43 +1,141 @@
-.app {
-  font-family: system-ui, sans-serif;
-  padding: 2rem;
-  background: #0f172a;
-  color: white;
-  min-height: 100vh;
+/* ======================================================
+   App Layout
+   ====================================================== */
+
+.layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr 420px;
+  gap: 2.5rem;
+  align-items: start;
+  max-width: 1400px;
+  margin: 0 auto;
 }
+
+@media (max-width: 1200px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.app {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  padding: 2rem;
+  min-height: 100vh;
+  color: #f2f3f5;
+
+  /* Base Discord dark */
+  background:
+    linear-gradient(
+      to right,
+      #1e1f22 0%,
+      #1e1f22 65%,
+      rgba(35, 165, 90, 0.12) 85%,
+      rgba(35, 165, 90, 0.18) 100%
+    );
+}
+
+
+
+
+/* ======================================================
+   Panels
+   ====================================================== */
 
 .panel {
-  background: #1e293b;
-  padding: 1.5rem;
+  background: #2b2d31;
+  padding: 1.75rem;
   border-radius: 12px;
   margin-bottom: 2rem;
-  max-width: 420px;
 }
 
-select, button {
-  display: block;
+/* ======================================================
+   Typography
+   ====================================================== */
+
+h1 {
+  font-size: 2.1rem;
+  font-weight: 700;
+  margin-bottom: 2rem;
+  color: #ffffff;
+}
+
+h2 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #f2f3f5;
+}
+
+h3 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #f2f3f5;
+}
+
+/* ======================================================
+   Inputs & Buttons
+   ====================================================== */
+
+select {
+  background: #1e1f22;
+  color: #f2f3f5;
+  border: 1px solid #3f4147;
+  padding: 0.65rem 0.75rem;
+  border-radius: 6px;
   margin-top: 1rem;
-  padding: 0.6rem;
+}
+
+select:focus {
+  outline: none;
+  border-color: #23a55a;
+}
+
+/* Discord-style buttons */
+button {
+  display: block;
   width: 100%;
+  margin-top: 1rem;
+  padding: 0.65rem;
   border-radius: 6px;
   border: none;
+
+  background: #23a55a;
+  color: #ffffff;
+
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.12s ease;
 }
 
-button {
-  background: #22c55e;
-  color: black;
-  font-weight: bold;
-  cursor: pointer;
+button:hover {
+  background: #1f8b4c;
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ======================================================
+   Gate Components
+   ====================================================== */
+
+.gate-wrapper {
+  padding: 1rem;
+  background: #1e1f22;
+  border-radius: 10px;
+  margin-top: 1.25rem;
 }
 
 .gate {
   position: relative;
   width: 200px;
   height: 120px;
-  margin: 2rem auto;
-  background: #334155;
+  margin: 1.5rem auto;
+
+  background: #313338;
   overflow: hidden;
-  border-radius: 6px;
+  border-radius: 8px;
 }
 
 .gate-door {
@@ -45,7 +143,7 @@ button {
   top: 0;
   width: 50%;
   height: 100%;
-  background: #94a3b8;
+  background: #b5bac1;
   transition: transform 0.8s ease;
 }
 
@@ -62,7 +160,7 @@ button {
 
 .gate.deny {
   animation: shake 0.4s;
-  background: #7f1d1d;
+  background: #3f1d1d;
 }
 
 @keyframes shake {
@@ -73,7 +171,89 @@ button {
   100% { transform: translateX(0); }
 }
 
+.blocked {
+  opacity: 0.65;
+  font-size: 0.85rem;
+  text-align: center;
+  color: #b5bac1;
+}
+
 .reason {
   text-align: center;
-  font-weight: bold;
+  font-weight: 600;
+  margin-top: 0.75rem;
+}
+
+/* ======================================================
+   Right-hand Ticket Sidebar
+   ====================================================== */
+
+.ticket-sidebar {
+  position: sticky;
+  top: 2rem;
+  align-self: start;
+
+  background: #313338;
+  padding: 1.5rem;
+  border-radius: 12px;
+  width: 260px;
+}
+
+.active-ticket {
+  background: #1e1f22;
+  padding: 0.85rem;
+  border-radius: 8px;
+  margin: 1rem 0;
+}
+
+.active-ticket small {
+  display: block;
+  opacity: 0.6;
+  font-size: 0.75rem;
+}
+
+/* ======================================================
+   Modal (Ticket Picker)
+   ====================================================== */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(30, 31, 34, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal {
+  background: #2b2d31;
+  padding: 2rem;
+  border-radius: 14px;
+  width: 360px;
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+.modal-ticket {
+  background: #313338;
+  padding: 1rem;
+  border-radius: 10px;
+  margin-top: 1rem;
+  cursor: pointer;
+  transition: background 0.12s ease;
+}
+
+.modal-ticket:hover {
+  background: #383a40;
+}
+
+.modal-ticket.selected {
+  outline: 2px solid #23a55a;
+}
+
+.close-btn {
+  margin-top: 1.5rem;
+  background: #4f545c;
+  color: #ffffff;
 }

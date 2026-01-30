@@ -39,8 +39,13 @@ export async function createTicket(origin, destination) {
   return res.json();
 }
 
-export async function scanTicket(ticketId, gateOrigin) {
-  const res = await fetch(`${API}/scan`, {
+
+
+export async function scanTicket(ticketId, gateStation) {
+  
+  
+
+  return fetch(`${API}/scan`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -48,9 +53,7 @@ export async function scanTicket(ticketId, gateOrigin) {
     },
     body: JSON.stringify({
       ticketId,
-      gateOrigin,
+      gateOrigin: gateStation, 
     }),
-  });
-
-  return res.json();
+  }).then(res => res.json());
 }
