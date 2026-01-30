@@ -50,3 +50,18 @@ Internal service – not publicly accessible
 
 Access - Only reachable from API Gateway over the internal Docker network
 
+3 Gate Scanner Service (gate-scanner-service)
+
+Internal service – simulates physical station gates
+
+    Responsibilities
+    Receives scan requests from API Gateway,
+    Validates tickets via Ticket Validation Service,
+    Applies circuit breaker logic for resilience,
+    Returns gate actions (OPEN / DENY)
+
+    Security 
+    Protected using an internal service token,
+    Never exposed directly to frontend
+
+
