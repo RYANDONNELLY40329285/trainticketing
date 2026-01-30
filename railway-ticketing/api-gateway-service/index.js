@@ -1,6 +1,6 @@
 import dotenv from "dotenv";
 dotenv.config(); 
-
+ import cors from "cors";
 import express from "express";
 import bodyParser from "body-parser";
 
@@ -8,8 +8,17 @@ import { apiKeyAuth } from "./auth/apiKeyAuth.js";
 import { jwtAuth } from "./auth/jwtAuth.js";
 import { ticketProxy } from "./proxy/ticketProxy.js";
 import { gateProxy } from "./proxy/gateProxy.js";
+import { routesProxy } from "./proxy/routesProxy.js";
+
 
 const app = express();
+
+
+app.use(cors({
+  origin: "http://localhost:5173",
+  methods: ["GET", "POST", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization", "X-API-Key", "Idempotency-Key"],
+}));
 app.use(bodyParser.json());
 
 // USER FLOW (JWT)
@@ -17,6 +26,9 @@ app.post("/tickets", jwtAuth, ticketProxy);
 
 // GATE FLOW (API KEY)
 app.post("/scan", apiKeyAuth, gateProxy);
+
+//routes 
+app.get("/routes", routesProxy);
 
 
 app.post("/auth/login", async (req, res) => {

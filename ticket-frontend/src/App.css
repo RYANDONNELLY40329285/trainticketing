@@ -1,0 +1,79 @@
+.app {
+  font-family: system-ui, sans-serif;
+  padding: 2rem;
+  background: #0f172a;
+  color: white;
+  min-height: 100vh;
+}
+
+.panel {
+  background: #1e293b;
+  padding: 1.5rem;
+  border-radius: 12px;
+  margin-bottom: 2rem;
+  max-width: 420px;
+}
+
+select, button {
+  display: block;
+  margin-top: 1rem;
+  padding: 0.6rem;
+  width: 100%;
+  border-radius: 6px;
+  border: none;
+}
+
+button {
+  background: #22c55e;
+  color: black;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.gate {
+  position: relative;
+  width: 200px;
+  height: 120px;
+  margin: 2rem auto;
+  background: #334155;
+  overflow: hidden;
+  border-radius: 6px;
+}
+
+.gate-door {
+  position: absolute;
+  top: 0;
+  width: 50%;
+  height: 100%;
+  background: #94a3b8;
+  transition: transform 0.8s ease;
+}
+
+.left { left: 0; }
+.right { right: 0; }
+
+.gate.open .left {
+  transform: translateX(-100%);
+}
+
+.gate.open .right {
+  transform: translateX(100%);
+}
+
+.gate.deny {
+  animation: shake 0.4s;
+  background: #7f1d1d;
+}
+
+@keyframes shake {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(-6px); }
+  50% { transform: translateX(6px); }
+  75% { transform: translateX(-6px); }
+  100% { transform: translateX(0); }
+}
+
+.reason {
+  text-align: center;
+  font-weight: bold;
+}

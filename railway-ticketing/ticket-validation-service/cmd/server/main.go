@@ -35,6 +35,11 @@ func main() {
 		),
 	)
 
+	http.HandleFunc(
+		"/routes",
+		handler.RequireInternalToken(handler.RoutesHandler()),
+	)
+
 	http.Handle("/metrics", promhttp.Handler())
 
 	http.HandleFunc("/healthz", func(w http.ResponseWriter, _ *http.Request) {
