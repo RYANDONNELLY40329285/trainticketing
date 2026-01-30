@@ -13,7 +13,7 @@ use once_cell::sync::Lazy;
 
 use circuit_breaker::CircuitBreaker;
 
-const VALIDATION_SERVICE_URL: &str = "http://localhost:8080/validate";
+
 
 // -----------------------
 // Circuit breaker (global)
@@ -70,12 +70,20 @@ async fn scan_ticket(
         .build()
         .unwrap();
 
+    // ---- Load secrets / URLs from env ----
     let token = std::env::var("INTERNAL_SERVICE_TOKEN")
         .expect("INTERNAL_SERVICE_TOKEN must be set");
 
+    let validation_base =
+        std::env::var("TICKET_VALIDATION_SERVICE_URL")
+            .expect("TICKET_VALIDATION_SERVICE_URL must be set");
+
+    let validation_url = format!("{}/validate", validation_base);
+
+    // ---- Call ticket-validation-service ----
     let response = client
-        .post(VALIDATION_SERVICE_URL)
-      .header("X-Internal-Token", token)
+        .post(validation_url)
+        .header("X-Internal-Token", token)
         .json(&req)
         .send()
         .await;
@@ -85,22 +93,10 @@ async fn scan_ticket(
     // ---- Handle response ----
     match response {
         Ok(resp) => {
-            let status = resp.status();
             let raw_body = resp.text().await.unwrap_or_default();
             let body = raw_body.trim();
 
-            //debugging
-         //   println!(
-           //        "VALIDATION RAW RESPONSE [{}]: {}",
-            //       status,
-             //      body
-           // );
-
-
-
-
-
-            //  Try JSON first
+            // 1 Try JSON response
             if let Ok(parsed) = serde_json::from_str::<ValidationResponse>(body) {
                 breaker.on_success();
 
@@ -142,7 +138,7 @@ async fn scan_ticket(
                 );
             }
 
-            // 3Invalid response format
+            // 3Invalid response
             breaker.on_failure();
             (
                 StatusCode::BAD_GATEWAY,
@@ -166,6 +162,8 @@ async fn scan_ticket(
         }
     }
 }
+
+
 
 // -----------------------
 // App entry point

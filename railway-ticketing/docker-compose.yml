@@ -1,0 +1,41 @@
+
+
+services:
+  api-gateway:
+    build: ./api-gateway-service
+    ports:
+      - "3000:3000"
+    env_file: .env
+    depends_on:
+      - auth-service
+      - gate-scanner
+    networks:
+      - backend
+
+  auth-service:
+    build: ./auth-service
+    env_file: .env
+    expose:
+      - "4000"
+    networks:
+      - backend
+
+  gate-scanner:
+    build: ./gate-scanner-service
+    env_file: .env
+    expose:
+      - "8090"
+    networks:
+      - backend
+
+  ticket-validation-service:
+    build: ./ticket-validation-service
+    env_file: .env
+    expose:
+      - "8080"
+    networks:
+      - backend
+
+networks:
+  backend:
+    driver: bridge
