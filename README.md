@@ -24,9 +24,9 @@ Only the API Gateway exposes ports to the host machine.
 Public-facing entry point for all client requests
 
     Responsibilities
-    Routes requests to internal services
-    Enforces authentication and authorization
-    Separates user flows from internal service flows
+    Routes requests to internal services,
+    Enforces authentication and authorization,
+    Separates user flows from internal service flows,
     Acts as a security boundary
 
 Exposed port:
